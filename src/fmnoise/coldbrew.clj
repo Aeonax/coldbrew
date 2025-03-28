@@ -86,6 +86,11 @@
       (.build cache-builder (cache-loader cache-fn))
       (.build cache-builder))))
 
+(defn get-cache-keys
+  "Returns a list of cache keys"
+  [^Cache cache]
+  (.keySet (.asMap cache)))
+
 (defn put
   "Insert/update a cache entry."
   [^Cache cache key val]
@@ -101,6 +106,11 @@
   "Invalidate a cache entry."
   [^Cache cache key]
   (.invalidate cache key))
+
+(defn invalidate-keys
+  "Invalidate a cache entries."
+  [^Cache cache keys]
+  (.invalidateAll cache keys))
 
 (defn lookup
   "Performs cache lookup. Accepts optional function which uses cache key to calculate missing value"
