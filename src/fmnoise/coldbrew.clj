@@ -149,6 +149,7 @@
   (let [options (meta f)
         condition-fn (-> f meta :when)
         cache (build-cache options (when-not condition-fn f))]
+    ^{::cache cache}
     (fn [& args]
       (let [key (or args [])]
         (if condition-fn
@@ -191,11 +192,10 @@
                               :else 3))
         fdefn (filter some? (list name docstring args prepost))]
     `(do
-      (def ^:private ~fname
-         (cached
-          (with-meta
-            (fn [~@cache-key]
-              ~@body)
-            ~cache-options)))
-      (defn ~@fdefn (~fname ~@cache-key))
-      (vary-meta ~name merge ~(meta name)))))
+       (def ^:private ~fname (cached
+                              (with-meta
+                                (fn [~@cache-key]
+                                  ~@body)
+                                ~cache-options)))
+       (defn ~@fdefn (~fname ~@cache-key))
+       (alter-meta! (var ~name) merge (meta ~fname) ~(meta name)))))
