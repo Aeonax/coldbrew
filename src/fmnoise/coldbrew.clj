@@ -86,7 +86,7 @@
       (.build cache-builder (cache-loader cache-fn))
       (.build cache-builder))))
 
-(defn get-cache-keys
+(defn cache-keys
   "Returns a list of cache keys"
   [^Cache cache]
   (.keySet (.asMap cache)))
