@@ -156,6 +156,9 @@
           (cond-lookup cache key condition-fn f args)
           (lookup cache key))))))
 
+(defn cached-cache [cached-fn]
+  (-> (meta cached-fn) ::cache))
+
 (defmacro defcached
   "Creates a function which uses Caffeine Loading Cache under the hood.
   Function declaration is similar to defn:
@@ -199,3 +202,7 @@
                                 ~cache-options)))
        (defn ~@fdefn (~fname ~@cache-key))
        (alter-meta! (var ~name) merge (meta ~fname) ~(meta name)))))
+
+(defmacro defcached-cache [defcache-fn]
+  `(cached-cache (var ~defcache-fn)))
+
